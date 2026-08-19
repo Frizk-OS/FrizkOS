@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Загрузки FrizkOS</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            margin: 0; 
+            display: flex; 
+            height: 100vh; 
+            color: #212121; 
+            background-color: #f5f5f5;
+        }
+        
+        .sidebar { 
+            width: 300px; 
+            background: #ffffff; 
+            border-right: 1px solid #e0e0e0; 
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-header {
+            padding: 20px;
+            background: #167c80; 
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .device-list { 
+            list-style: none; 
+            padding: 0; 
+            margin: 0; 
+            overflow-y: auto;
+        }
+        .device-list li { 
+            padding: 15px 20px; 
+            border-bottom: 1px solid #eeeeee; 
+            cursor: pointer; 
+            transition: background 0.2s;
+        }
+        .device-list li:hover { background: #f0f0f0; }
+        .device-list li.active {
+            background: #e0f7fa;
+            border-left: 4px solid #167c80;
+            padding-left: 16px;
+            font-weight: bold;
+        }
+        .device-codename {
+            display: block;
+            font-size: 12px;
+            color: #757575;
+            font-weight: normal;
+            margin-top: 4px;
+        }
+
+        .main-content { 
+            flex: 1; 
+            padding: 30px; 
+            overflow-y: auto; 
+        }
+        .header-title {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #212121;
+        }
+        
+        .build-card { 
+            background: #ffffff; 
+            border: 1px solid #e0e0e0; 
+            padding: 20px; 
+            margin-bottom: 20px; 
+            border-radius: 8px; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .build-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eeeeee;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+        .build-title { 
+            font-weight: 600; 
+            font-size: 18px; 
+            word-break: break-all;
+        }
+        .build-type {
+            background: #167c80;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .build-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .detail-item {
+            font-size: 14px;
+        }
+        .detail-label {
+            color: #757575;
+            font-weight: 600;
+        }
+        .detail-value {
+            font-family: monospace;
+            color: #424242;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        .btn { 
+            display: inline-block; 
+            padding: 10px 20px; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 4px; 
+            font-weight: 600; 
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .btn-download { background: #167c80; }
+        .btn-download:hover { background: #105a5d; }
+        .btn-recovery { background: #ff9800; }
+        .btn-recovery:hover { background: #e68a00; }
+        
+        .empty-state {
+            color: #757575;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-header">FrizkOS Downloads</div>
+        <ul class="device-list" id="device-list">
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <h1 class="header-title" id="device-title">Select device</h1>
+        <div id="builds-container">
+            <p class="empty-state">Builds appear immediately after selection.</p>
+        </div>
+    </div>
+
+    <script>
+        const database = {
+            "i9300": {
+                brand: "Samsung",
+                model: "Galaxy S3 (i9300/m0)",
+                builds: [
+                    {
+                        filename: "Frizkos_11_alpha_0.1_261308_i9300.zip",
+                        type: "nightly",
+                        version: "Android 4.4.4",
+                        size: "235 MB",
+                        date: "2026-08-13",
+                        sha256: "f33a3d0e596647e8e93653c5c798943932d84145c4da09ab15d99921360639f0",
+                        url: "https://github.com/Frizk-OS/Realese/releases/download/Alpha_0.1/frizkos_11_alpha_0.1_261308_i9300.zip",
+                        recovery_url: "#link-to-recovery"
+                    },
+                ]
+            },
+            "i8190": {
+                brand: "Samsung",
+                model: "Galaxy S3 mini (i8190/golden)",
+                builds: [                    
+                    {
+                        filename: "FrizkOS-11-20260818-NIGHTLY-i8190.zip",
+                        type: "nightly",
+                        version: "Android 4.4.4",
+                        size: "235 MB",
+                        date: "2026-08-18",
+                        sha256: "idk",
+                        url: "#link-to-zip",
+                        recovery_url: "#link-to-recovery"
+                    },
+                ] 
+            }
+        };
+
+        function initSidebar() {
+            const list = document.getElementById('device-list');
+            list.innerHTML = '';
+
+            for (const [codename, data] of Object.entries(database)) {
+                const li = document.createElement('li');
+                li.id = 'nav-' + codename;
+                li.onclick = () => renderBuilds(codename);
+                
+                li.innerHTML = `
+                    ${data.brand} ${data.model}
+                    <span class="device-codename">${codename}</span>
+                `;
+                list.appendChild(li);
+            }
+        }
+
+        function renderBuilds(codename) {
+            document.querySelectorAll('.device-list li').forEach(el => el.classList.remove('active'));
+            const activeNav = document.getElementById('nav-' + codename);
+            if (activeNav) activeNav.classList.add('active');
+
+            window.history.replaceState(null, null, '#' + codename);
+
+            const device = database[codename];
+            document.getElementById('device-title').innerText = `${device.brand} ${device.model} (${codename})`;
+            
+            const container = document.getElementById('builds-container');
+
+            if (!device || !device.builds || device.builds.length === 0) {
+                container.innerHTML = '<p class="empty-state">For this device dosent have build</p>';
+                return;
+            }
+
+            let html = '';
+            device.builds.forEach(build => {
+                let recoveryBtn = build.recovery_url && build.recovery_url !== "#link-to-recovery" ? 
+                    `<a href="${build.recovery_url}" class="btn btn-recovery">Recovery</a>` : '';
+
+                html += `
+                    <div class="build-card">
+                        <div class="build-header">
+                            <div class="build-title">${build.filename}</div>
+                            <div class="build-type">${build.type}</div>
+                        </div>
+                        <div class="build-details">
+                            <div class="detail-item"><span class="detail-label">Version:</span> <span class="detail-value">${build.version}</span></div>
+                            <div class="detail-item"><span class="detail-label">Size:</span> <span class="detail-value">${build.size}</span></div>
+                            <div class="detail-item"><span class="detail-label">Date build:</span> <span class="detail-value">${build.date}</span></div>
+                            <div class="detail-item"><span class="detail-label">SHA256:</span> <span class="detail-value" title="${build.sha256}">${build.sha256.substring(0, 16)}...</span></div>
+                        </div>
+                        <div class="actions">
+                            <a href="${build.url}" class="btn btn-download">Download build</a>
+                            ${recoveryBtn}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initSidebar();
+
+            let hash = window.location.hash.substring(1);
+            if (hash && database[hash]) {
+                renderBuilds(hash);
+            }
+        });
+    </script>
+</body>
+</html>

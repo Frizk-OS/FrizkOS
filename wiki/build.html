@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Build Guide - FrizkOS Wiki</title>
+    <style>
+        /* Базовый сброс и шрифты */
+        body { 
+            margin: 0; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background-color: #121212; 
+            color: #e0e0e0; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+        }
+        
+        /* Верхняя панель */
+        header { 
+            background-color: #1f1f1f; 
+            padding: 15px 30px; 
+            border-bottom: 1px solid #333; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        header a { 
+            color: #167c80; 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 1.2rem; 
+        }
+
+        /* Контейнер для сайдбара и контента */
+        .layout { 
+            display: flex; 
+            flex: 1; 
+            overflow: hidden; 
+        }
+
+        /* Боковое меню навигации */
+        aside { 
+            width: 280px; 
+            background-color: #1a1a1a; 
+            border-right: 1px solid #333; 
+            padding: 25px 20px; 
+            overflow-y: auto; 
+        }
+        aside h3 { 
+            color: #888; 
+            font-size: 0.85rem; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        aside h3:first-child { margin-top: 0; }
+        aside ul { 
+            list-style: none; 
+            padding: 0; 
+            margin: 0;
+        }
+        aside li { 
+            margin-bottom: 8px; 
+        }
+        aside a { 
+            color: #ccc; 
+            text-decoration: none; 
+            font-size: 0.95rem; 
+            display: block;
+            padding: 5px 0;
+            transition: color 0.1s ease;
+        }
+        aside a:hover, aside a.active { 
+            color: #167c80; 
+            font-weight: 500;
+        }
+
+        /* Основной контент */
+        main { 
+            flex: 1; 
+            padding: 40px 60px; 
+            overflow-y: auto; 
+            background-color: #121212; 
+        }
+        .content-header { 
+            border-bottom: 1px solid #333; 
+            padding-bottom: 20px; 
+            margin-bottom: 30px; 
+        }
+        h1 { 
+            margin: 0 0 10px 0; 
+            font-size: 2.2rem; 
+            font-weight: 400;
+        }
+        .content-header p {
+            margin: 0;
+            color: #aaa;
+            font-size: 1.1rem;
+        }
+        h2 { 
+            border-bottom: 1px solid #333; 
+            padding-bottom: 10px; 
+            margin-top: 40px; 
+            font-weight: 400;
+        }
+        p {
+            line-height: 1.6;
+            color: #ccc;
+            font-size: 1.05rem;
+        }
+
+        /* Блоки кода */
+        pre { 
+            background: #1a1a1a; 
+            padding: 15px 20px; 
+            border-radius: 6px; 
+            border: 1px solid #333;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        code { 
+            font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            color: #e0e0e0; 
+            font-size: 0.9rem;
+        }
+        
+        .alert {
+            background-color: rgba(22, 124, 128, 0.1);
+            border-left: 4px solid #167c80;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .alert strong {
+            color: #167c80;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="../wiki/index.html">FrizkOS Documentation</a>
+        <a href="../downloads/index.html">Get FrizkOS</a>
+    </header>
+
+    <div class="layout">
+        <aside>
+            <h3>Supported Devices</h3>
+            <ul>
+                <li><a href="devices/i9300.html">Samsung Galaxy S3 (i9300)</a></li>
+                <li><a href="devices/golden.html">Samsung Galaxy S3 Mini (golden)</a></li>
+            </ul>
+            <h3>Development</h3>
+            <ul>
+                <li><a href="build.html" class="active">How to build FrizkOS</a></li>
+                <li><a href="docker.html">Docker environment</a></li>
+                <li><a href="onecore.html">OneCore API Specs</a></li>
+            </ul>
+        </aside>
+
+        <main>
+            <div class="content-header">
+                <h1>Compilation Guide</h1>
+                <p>Step-by-step instructions for compiling FrizkOS from source code.</p>
+            </div>
+            We rely on a strictly isolated Docker build environment. Modern Linux host systems utilize toolchains that will fatally break the compilation of legacy C/C++ kernel and framework components. Using Docker ensures a clean, reproducible build phase.<
+            <p>/p>
+
+            <h2>1. Prepare the Build Environment</h2>
+            <p>Clone the build environment repository and construct the Docker image. This image contains the required outdated toolchains, specifically GCC 4.7 and legacy glibc libraries.</p>
+            <pre><code>git clone https://github.com/frizk-os/android_build_env.git
+cd android_build_env
+docker build -t frizkos-env .</code></pre>
+
+            <h2>2. Sync the Source Tree</h2>
+            <p>Initialize the repository and sync the source code. Allocate adequate disk space and ensure a stable connection.</p>
+            <pre><code>docker run -it --rm -v $(pwd)/frizkos_src:/src frizkos-env /bin/bash
+cd /src
+repo init -u https://github.com/frizk-os/android.git -b kitkat
+repo sync -j$(nproc --all)</code></pre>
+
+            <h2>3. Configure CCache</h2>
+            <p>Compiling the OS from scratch takes considerable time. Enabling compiler caching is mandatory for subsequent builds, as it dramatically reduces compilation time for native C and C++ binaries.</p>
+            <pre><code>export USE_CCACHE=1
+prebuilts/misc/linux-x86/ccache/ccache -M 50G</code></pre>
+
+            <h2>4. Start the Compilation</h2>
+            <p>Set up the build environment. If you are switching between targets (e.g., from i9300 to golden), you <strong>must</strong> execute <code>make clobber</code> to purge incompatible object files before compiling.</p>
+            <pre><code>source build/envsetup.sh
+
+# Wipe previous target binaries
+make clobber 
+
+# Build for your target
+brunch i9300
+# OR
+brunch golden</code></pre>
+            
+            <div class="alert">
+                <strong>Success:</strong> Upon successful compilation, the flashable <code>.zip</code> package will be located at <code>out/target/product/[CODENAME]/</code>. Use TWRP or a fastboot wrapper to flash the image.
+            </div>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker Environment - FrizkOS Wiki</title>
+    <style>
+        body { 
+            margin: 0; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background-color: #121212; 
+            color: #e0e0e0; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+        }
+        
+        header { 
+            background-color: #1f1f1f; 
+            padding: 15px 30px; 
+            border-bottom: 1px solid #333; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        header a { 
+            color: #167c80; 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 1.2rem; 
+        }
+
+        .layout { 
+            display: flex; 
+            flex: 1; 
+            overflow: hidden; 
+        }
+
+        aside { 
+            width: 280px; 
+            background-color: #1a1a1a; 
+            border-right: 1px solid #333; 
+            padding: 25px 20px; 
+            overflow-y: auto; 
+        }
+        aside h3 { 
+            color: #888; 
+            font-size: 0.85rem; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        aside h3:first-child { margin-top: 0; }
+        aside ul { 
+            list-style: none; 
+            padding: 0; 
+            margin: 0;
+        }
+        aside li { 
+            margin-bottom: 8px; 
+        }
+        aside a { 
+            color: #ccc; 
+            text-decoration: none; 
+            font-size: 0.95rem; 
+            display: block;
+            padding: 5px 0;
+            transition: color 0.1s ease;
+        }
+        aside a:hover, aside a.active { 
+            color: #167c80; 
+            font-weight: 500;
+        }
+
+        main { 
+            flex: 1; 
+            padding: 40px 60px; 
+            overflow-y: auto; 
+            background-color: #121212; 
+        }
+        .content-header { 
+            border-bottom: 1px solid #333; 
+            padding-bottom: 20px; 
+            margin-bottom: 30px; 
+        }
+        h1 { 
+            margin: 0 0 10px 0; 
+            font-size: 2.2rem; 
+            font-weight: 400;
+        }
+        .content-header p {
+            margin: 0;
+            color: #aaa;
+            font-size: 1.1rem;
+        }
+        h2 { 
+            border-bottom: 1px solid #333; 
+            padding-bottom: 10px; 
+            margin-top: 40px; 
+            font-weight: 400;
+        }
+        p {
+            line-height: 1.6;
+            color: #ccc;
+            font-size: 1.05rem;
+        }
+
+        pre { 
+            background: #1a1a1a; 
+            padding: 15px 20px; 
+            border-radius: 6px; 
+            border: 1px solid #333;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        code { 
+            font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            color: #e0e0e0; 
+            font-size: 0.9rem;
+        }
+        
+        .alert {
+            background-color: rgba(22, 124, 128, 0.1);
+            border-left: 4px solid #167c80;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .alert strong {
+            color: #167c80;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="../">FrizkOS Documentation</a>
+        <a href="../downloads/">Get FrizkOS</a>
+    </header>
+
+    <div class="layout">
+        <aside>
+            <h3>Supported Devices</h3>
+            <ul>
+                <li><a href="devices/i9300.html">Samsung Galaxy S3 (i9300)</a></li>
+                <li><a href="devices/golden.html">Samsung Galaxy S3 Mini (golden)</a></li>
+            </ul>
+            <h3>Development</h3>
+            <ul>
+                <li><a href="build.html">How to build FrizkOS</a></li>
+                <li><a href="docker.html" class="active">Docker environment</a></li>
+                <li><a href="onecore.html">OneCore API Specs</a></li>
+            </ul>
+        </aside>
+
+        <main>
+            <div class="content-header">
+                <h1>Docker Build Environment</h1>
+                <p>Isolated legacy toolchain setup for compiling FrizkOS.</p>
+            </div>
+            
+            <p>Building legacy Android source trees (like KitKat 4.4.4) on modern Linux distributions will result in fatal compilation errors. The legacy C/C++ toolchains, specifically GCC 4.7, are incompatible with modern <code>glibc</code> and <code>make</code> versions. To avoid polluting the host system and ensure a reproducible build, we strictly mandate the use of a Docker container based on Ubuntu 14.04.</p>
+
+            <h2>1. The Dockerfile</h2>
+            <p>Create a <code>Dockerfile</code> in a separate directory. This configuration pulls the correct base image and installs all necessary dependencies for C/C++ compilation, Java, and repository management.</p>
+            <pre><code>FROM ubuntu:14.04
+
+ENV DEBIAN_FRONTEND noninteractive
+ENV USER build
+
+# Update and install build dependencies
+RUN apt-get update && apt-get install -y \
+    bison build-essential curl flex git gnupg gperf \
+    libesd0-dev liblz4-tool libncurses5-dev libsdl1.2-dev \
+    libwxgtk2.8-dev libxml2 libxml2-utils lzop openjdk-7-jdk \
+    pngcrush schedtool squashfs-tools xsltproc zip zlib1g-dev \
+    g++-multilib gcc-multilib lib32ncurses5-dev lib32readline-gplv2-dev \
+    lib32z1-dev python-minimal
+
+# Install Repo tool
+RUN curl http://commondatastorage.googleapis.com/git-repo-downloads/repo > /usr/local/bin/repo \
+    && chmod a+x /usr/local/bin/repo
+
+# Create build user
+RUN useradd -m -s /bin/bash $USER
+USER $USER
+WORKDIR /src
+
+CMD ["/bin/bash"]</code></pre>
+
+            <h2>2. Building the Image</h2>
+            <p>Execute this command in the directory containing your Dockerfile to construct the image. This process only needs to be done once.</p>
+            <pre><code>docker build -t frizkos-build-env .</code></pre>
+
+            <h2>3. Running the Container</h2>
+            <p>When starting the container, you must map your local source directory to the <code>/src</code> directory inside the container using the <code>-v</code> flag. This ensures that the downloaded source code and compiled object files remain on your host machine after the container is destroyed.</p>
+            <pre><code>docker run -it --rm \
+  -v /path/to/your/frizkos_src:/src \
+  frizkos-build-env</code></pre>
+  
+            <div class="alert">
+                <strong>Memory Warning:</strong> Ensure your Docker daemon has access to at least 16GB of RAM and sufficient swap space. The linker (<code>ld</code>) will consume massive amounts of memory when processing the native C++ webkit and framework binaries.
+            </div>
+        </main>
+    </div>
+</body>
+</html>

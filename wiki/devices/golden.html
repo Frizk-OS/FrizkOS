@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Samsung Galaxy S III mini (golden) - FrizkOS Wiki</title>
+    <style>
+        body { 
+            margin: 0; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background-color: #121212; 
+            color: #e0e0e0; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+        }
+        
+        header { 
+            background-color: #1f1f1f; 
+            padding: 15px 30px; 
+            border-bottom: 1px solid #333; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        header a { 
+            color: #167c80; 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 1.2rem; 
+        }
+
+        .layout { 
+            display: flex; 
+            flex: 1; 
+            overflow: hidden; 
+        }
+
+        aside { 
+            width: 280px; 
+            background-color: #1a1a1a; 
+            border-right: 1px solid #333; 
+            padding: 25px 20px; 
+            overflow-y: auto; 
+        }
+        aside h3 { 
+            color: #888; 
+            font-size: 0.85rem; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        aside h3:first-child { margin-top: 0; }
+        aside ul { 
+            list-style: none; 
+            padding: 0; 
+            margin: 0;
+        }
+        aside li { 
+            margin-bottom: 8px; 
+        }
+        aside a { 
+            color: #ccc; 
+            text-decoration: none; 
+            font-size: 0.95rem; 
+            display: block;
+            padding: 5px 0;
+            transition: color 0.1s ease;
+        }
+        aside a:hover, aside a.active { 
+            color: #167c80; 
+            font-weight: 500;
+        }
+
+        main { 
+            flex: 1; 
+            padding: 40px 60px; 
+            overflow-y: auto; 
+            background-color: #121212; 
+        }
+        
+        .device-hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 40px;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 30px;
+        }
+        
+        .device-info {
+            flex: 1;
+        }
+
+        .content-header { 
+            margin-bottom: 30px; 
+        }
+        h1 { 
+            margin: 0 0 10px 0; 
+            font-size: 2.2rem; 
+            font-weight: 400;
+        }
+        .content-header p {
+            margin: 0;
+            color: #aaa;
+            font-size: 1.1rem;
+        }
+        
+        .device-image {
+            flex-shrink: 0;
+            width: 220px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        .device-image img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        h2 { 
+            border-bottom: 1px solid #333; 
+            padding-bottom: 10px; 
+            margin-top: 0; 
+            font-weight: 400;
+        }
+
+        .btn-group { 
+            display: flex; 
+            gap: 15px; 
+        }
+        .btn { 
+            display: inline-block; 
+            padding: 10px 24px; 
+            background-color: #167c80; 
+            color: #fff; 
+            text-decoration: none; 
+            border-radius: 4px; 
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: background 0.2s;
+        }
+        .btn:hover { background-color: #126366; }
+        .btn-outline { 
+            background-color: transparent; 
+            border: 1px solid #167c80; 
+            color: #167c80; 
+        }
+        .btn-outline:hover { background-color: rgba(22, 124, 128, 0.1); }
+
+        table { 
+            width: 100%; 
+            max-width: 700px;
+            border-collapse: collapse; 
+            margin-top: 20px; 
+        }
+        th, td { 
+            text-align: left; 
+            padding: 12px 15px; 
+            border-bottom: 1px solid #333; 
+        }
+        th { 
+            color: #888; 
+            font-weight: normal; 
+            width: 30%;
+        }
+        td { color: #ccc; }
+
+        pre { 
+            background: #1a1a1a; 
+            padding: 15px 20px; 
+            border-radius: 6px; 
+            border: 1px solid #333;
+            overflow-x: auto;
+        }
+        code { 
+            font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            color: #e0e0e0; 
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="../wiki/index.html">FrizkOS Documentation</a>
+        <a href="../index.html">FrizkOS Site</a>
+        <a href="../downloads/index.html">Get FrizkOS</a>
+    </header>
+
+    <div class="layout">
+        <aside>
+            <h3>Supported Devices</h3>
+            <ul>
+                <li><a href="i9300.html">Samsung Galaxy S3 (i9300)</a></li>
+                <li><a href="golden.html" class="active">Samsung Galaxy S3 Mini (golden)</a></li>
+            </ul>
+            <h3>Development</h3>
+            <ul>
+                <li><a href="../build.html">How to build FrizkOS</a></li>
+                <li><a href="../docker.html">Docker environment</a></li>
+                <li><a href="../onecore.html">OneCore API Specs</a></li>
+            </ul>
+        </aside>
+        <main>
+            <div class="device-hero">
+                <div class="device-info">
+                    <div class="content-header">
+                        <h1>Samsung Galaxy S III Mini</h1>
+                        <p>Codename: <strong>i8190 / golden</strong></p>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <a href="../../downloads/index.html#i8190" class="btn">Get the builds</a>
+                        <a href="../build.html" class="btn btn-outline">Build for yourself</a>
+                    </div>
+                </div>
+
+                <div class="device-image">
+                    <img src="https://images.fonearena.com/blog/wp-content/uploads/2014/03/Samsung-Galaxy-S-III-Mini-VE1.jpg" alt="Galaxy S3 Mini">
+                </div>
+            </div>
+
+            <h2>Hardware specifications</h2>
+            <table>
+                <tr><th>Architecture</th><td>ARMv7</td></tr>
+                <tr><th>SoC</th><td>ST-Ericsson NovaThor U8420</td></tr>
+                <tr><th>CPU</th><td>Dual-core 1.0 GHz Cortex-A9</td></tr>
+                <tr><th>GPU</th><td>Mali-400</td></tr>
+                <tr><th>RAM</th><td>1 GB</td></tr>
+                <tr><th>Storage</th><td>8/16 GB</td></tr>
+                <tr><th>Network</th><td>3G / HSPA+</td></tr>
+            </table>
+        </main>
+    </div>
+</body>
+</html>

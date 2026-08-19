@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FrizkOS - Official Wiki</title>
+    <style>
+        body { 
+            margin: 0; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background-color: #121212; 
+            color: #e0e0e0; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+        }
+        
+        header { 
+            background-color: #1f1f1f; 
+            padding: 15px 30px; 
+            border-bottom: 1px solid #333; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        header a { 
+            color: #167c80; 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 1.2rem; 
+        }
+
+        .layout { 
+            display: flex; 
+            flex: 1; 
+            overflow: hidden; 
+        }
+
+        aside { 
+            width: 280px; 
+            background-color: #1a1a1a; 
+            border-right: 1px solid #333; 
+            padding: 25px 20px; 
+            overflow-y: auto; 
+        }
+        aside h3 { 
+            color: #888; 
+            font-size: 0.85rem; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        aside h3:first-child { margin-top: 0; }
+        aside ul { 
+            list-style: none; 
+            padding: 0; 
+            margin: 0;
+        }
+        aside li { 
+            margin-bottom: 8px; 
+        }
+        aside a { 
+            color: #ccc; 
+            text-decoration: none; 
+            font-size: 0.95rem; 
+            display: block;
+            padding: 5px 0;
+            transition: color 0.1s ease;
+        }
+        aside a:hover, aside a.active { 
+            color: #167c80; 
+            font-weight: 500;
+        }
+        main { 
+            flex: 1; 
+            padding: 40px 60px; 
+            overflow-y: auto; 
+            background-color: #121212; 
+        }
+        .content-header { 
+            border-bottom: 1px solid #333; 
+            padding-bottom: 20px; 
+            margin-bottom: 30px; 
+        }
+        h1 { 
+            margin: 0 0 10px 0; 
+            font-size: 2.2rem; 
+            font-weight: 400;
+        }
+        .content-header p {
+            margin: 0;
+            color: #aaa;
+            font-size: 1.1rem;
+        }
+        h2 { 
+            border-bottom: 1px solid #333; 
+            padding-bottom: 10px; 
+            margin-top: 40px; 
+            font-weight: 400;
+        }
+        
+        p {
+            line-height: 1.6;
+            color: #ccc;
+            font-size: 1.05rem;
+        }
+
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .card {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 25px;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .card:hover {
+            border-color: #167c80;
+            transform: translateY(-2px);
+        }
+        .card h3 {
+            margin: 0 0 10px 0;
+            color: #167c80;
+            font-size: 1.2rem;
+        }
+        .card p {
+            margin: 0 0 15px 0;
+            font-size: 0.95rem;
+            color: #aaa;
+        }
+        .card a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .card a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="../wiki/index.html">FrizkOS Documentation</a>
+        <a href="../index.html">FrizkOS Site</a>
+        <a href="../downloads/index.html">Get FrizkOS</a>
+    </header>
+
+    <div class="layout">
+        <aside>
+            <h3>Supported Devices</h3>
+            <ul>
+                <li><a href="devices/i9300.html">Samsung Galaxy S3 (i9300)</a></li>
+                <li><a href="devices/golden.html">Samsung Galaxy S3 Mini (golden)</a></li>
+            </ul>
+            <h3>Development</h3>
+            <ul>
+                <li><a href="build.html">How to build FrizkOS</a></li>
+                <li><a href="docker.html">Docker environment</a></li>
+                <li><a href="onecore.html">OneCore API Specs</a></li>
+            </ul>
+        </aside>
+
+        <main>
+            <div class="content-header">
+                <h1>Welcome to FrizkOS Wiki</h1>
+                <p>The official knowledge base for the FrizkOS project.</p>
+            </div>
+            
+            <p>FrizkOS is a custom-built, bare-metal oriented operating system designed to bring back absolute control over hardware. We strip away modern bloatware, proprietary telemtry, and heavy abstractions, relying on our custom <strong>OneCore API</strong> and direct <strong>C/C++</strong> native bridges to communicate with the kernel.</p>
+
+            <h2>Getting Started</h2>
+            <div class="grid-cards">
+                <div class="card">
+                    <h3>Supported Devices</h3>
+                    <p>Check the hardware specifications, codenames, and status of officially supported targets, including experimental setups.</p>
+                    <a href="devices/i9300.html">View devices →</a>
+                </div>
+                
+                <div class="card">
+                    <h3>Build Guide</h3>
+                    <p>Learn how to set up our isolated Docker build environment and compile the system from source without polluting your host OS.</p>
+                    <a href="build.html">Read the build guide →</a>
+                </div>
+
+                <div class="card">
+                    <h3>OneCore Architecture</h3>
+                    <p>Documentation on our custom API, system calls, and how to write low-level shims in C and Rust for unsupported vendor binaries.</p>
+                    <a href="onecore.html">Explore the API →</a>
+                </div>
+            </div>
+
+            <h2>Contribute</h2>
+            <p>We are focused on low-level system engineering. If you have experience with kernel compilation, ARM assembly, or writing hardware abstraction layers in C/C++, check out our GitHub organization repositories.</p>
+        </main>
+    </div>
+</body>
+</html>
